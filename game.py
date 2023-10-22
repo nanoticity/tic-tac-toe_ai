@@ -36,12 +36,19 @@ class Game:
                     
                         self.playerx_turn = not self.playerx_turn
                         winner = self.board.who_wins()
-                        if winner != None:
-                            self.screen.fill(Color.color("white"))
-                            self.text("The winner is " + winner.upper(), (300, 300), 50, Color.color("black"))
+                        full = self.board.is_full()
+                        message = None
+                        if winner:
+                            message = "The winner is " + winner.upper()
+                        elif full:
+                            message = "It is a tie"
+                        if message:
+                            self.board.draw()
+                            self.text(message, (300, 300), 100, Color.color("red"))
                             pg.display.update()
-                            pg.time.wait(2000)
+                            pg.time.wait(3000)
                             self.reset()
+                            
                     self.clicked = True
             self.screen.fill(Color.color("white"))
             self.board.draw()

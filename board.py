@@ -36,7 +36,14 @@ class Board:
     def draw_o(self, pos):
         middle_pos = (pos[1] * (Board.SIZE[0] / 3) + Board.SIZE[0] / 6, pos[0] * (Board.SIZE[1] / 3) + Board.SIZE[1] / 6)
         pg.draw.circle(self.display, Color.color("black"), middle_pos, 75, 10)
-        
+    
+    def is_full(self):
+        for row in self.board:
+            for field in row:
+                if field == " ":
+                    return False
+        return True
+    
     def _who_wins(self):
         for row in self.board:
             if row[0] == row[1] and row[0] == row[2]:
@@ -75,3 +82,11 @@ if __name__ == "__main__":
                ["x", "o", "o"],
                ["o", "x", "x"]]
     assert b.who_wins() == None
+    b.board = [["o", "o", "x"],
+               ["x", "o", "o"],
+               ["o", "x", "x"]]
+    assert b.is_full() == True
+    b.board = [[" ", "o", "x"],
+               ["x", "o", "o"],
+               ["o", "x", "x"]]
+    assert b.is_full() == False
