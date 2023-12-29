@@ -7,7 +7,7 @@ pg.init()
 class Game:
     def reset(self):
         self.playerx_turn = True
-        self.board = Board(self.screen)
+        self.board = Board(display=self.screen)
     def __init__(self):
         self.screen = pg.display.set_mode(Board.SIZE)
         self.reset()

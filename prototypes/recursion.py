@@ -4,7 +4,7 @@ fac = 5
 for i in range(factorial, 1, -1):
     num *= i
 print(num)
-"""
+
 
 def factorial(i, n):
     if i > 0:
@@ -31,16 +31,24 @@ print(factorial2(5))
 
 
 # ---------------------------------------
-
-def myindex(array, tofind, i):
+"""
+def myindex(array, tofind, i=0):
     if i == len(array):
         return None
     else:
         if array[i] == tofind:
             return i
         else:
-            myindex(array, tofind, i + 1)
+            return myindex(array, tofind, i + 1)
     
     
-print(myindex([1, 2, 3, 4, 5, 6], 4, 0))
-    
+print(myindex([1, 2, 3, 4, 5, 6], 4))
+
+def myindexloop(array, tofind):
+    for i in range(len(array)):
+        if array[i] == tofind:
+            return i
+print(myindexloop([1, 2, 3, 4, 5, 6], 4))
+
+
+        
