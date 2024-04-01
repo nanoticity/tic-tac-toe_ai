@@ -12,6 +12,7 @@ class Board:
                  **kwargs):
         self.display = kwargs.get('display')
         self.board = board
+        self.score = None
         self.moves = []
 
     def draw(self):
@@ -103,14 +104,99 @@ class Board:
 
     def clone(self):
         return copy.deepcopy(self.board)
+    
+    def format_board(self):
+        string = ""
+        for row in self.board:
+            for column in row:
+                if column == " ":
+                    string += "_"
+                else:
+                    string += column
+            string += "\n"
+        return string
+    
+    def graphviz_possible_moves(self):
+        move_string = """
+        """
+        c = 0
+        for move in self.moves:
+            move_string += move.graphviz_move(c)
+            c += 1
+        
+        string = f"""digraph moves {{
+            node [
+                shape = "rect"
+            ]
+            edge 
+            [
+                fontsize="9"
+                ]
+            {move_string}
+        }}
+    
+        """
+        
+        return string
 
-    # def __str__(self) -> str:
-    #     return f"""
-    #     {self.board[0]}
-    #     {self.board[1]}
-    #     {self.board[2]}
-    #     """
-
+    def graph(self, file):
+        c = "white"
+        if self.who_wins() == "o":
+            c = "red"
+        elif self.who_wins() == "x":
+            c = "green"
+        elif self.is_full():
+            c = "yellow"
+        file.write(
+        f"""
+            {id(self)} [
+                
+                label = "{str(self)}"
+                fillcolor = "{c}"
+            ]
+        """)
+    
+    def graph_tree(self, file):
+        self.graph(file)
+        for m in self.moves:
+            m.graph(file)
+            m.board_after.graph_tree(file)
+            
+    def other_player(player):
+        if player == "x":
+            return "o"
+        else:
+            assert player == "o"
+            return "x"        
+    
+    def score_tree(self, player):
+        if self.who_wins() == player:
+            self.score = 1
+        elif self.who_wins() == Board.other_player(player):
+            self.score = -1
+        elif self.is_full():
+            self.score = 0
+        else:
+            self.score = 0
+            for m in self.moves:
+                m.board_after.score_tree(player)
+                self.score += m.board_after.score
+    
+    def find_best_move(self):
+        #set_move()
+        self.score_tree()
+        best = self.moves[0]
+        for move in self.moves:
+            if move.board.score > best.board.score:
+                best = move.board.score
+                
+        return best
+    
+    def __str__(self) -> str:
+        return f"""{"".join(self.board[0])}
+{"".join(self.board[1])}
+{"".join(self.board[2])}""".replace(" ", "_")
+    
     def __eq__(self, other):
         return (list(self.for_each_field()) ==
                 list(other.for_each_field()))
@@ -145,7 +231,7 @@ if __name__ == "__main__":
     for (row, col, field) in b.for_each_field():
         print(row, col, field)
         
-        
+    
     ml = [
         ['x', 'o', 'x'],
         ['o', 'o', 'x'],

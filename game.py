@@ -2,6 +2,7 @@ import pygame as pg
 from color import *
 from board import *
 from mouse import *
+from modeler import *
 pg.init()
 
 class Game:
