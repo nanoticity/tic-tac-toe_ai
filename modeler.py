@@ -20,14 +20,6 @@ class Move:
                 possible.append(Move(board, player, (row, col)))
         return possible
 
-    def graphviz_move(self, num):
-        string = f"""{num} [
-            label = "{self.board_after_move()}"
-        ]
-        start -> {num} [label = " {f"{self.player}: ({self.where[0]}, {self.where[1]})"}"]
-        """
-        return string
-    
     def graph(self, file):
         file.write(f"""
                    
@@ -46,12 +38,35 @@ class Move:
         return f"{self.player}, {self.where}\n{self.board_after_move()}"
 
 class Modeler:
-    def set_tree(board, player):
+    def set_tree(self, board, player):
         board.moves = Move.possible_moves(board, player)
         for move in board.moves:
             after_move = move.board_after_move()
             if not after_move.is_game_over():
-                Modeler.set_tree(after_move, Board.other_player(player))
+                self.set_tree(after_move, Board.other_player(player))
+                
+    def score_tree(self, board, player):
+        if board.who_wins() == player:
+            board.score = 1
+        elif board.who_wins() == Board.other_player(player):
+            board.score = -1
+        elif board.is_full():
+            board.score = 0
+        else:
+            board.score = 0
+            for m in board.moves:
+                self.score_tree(m.board_after, player)
+                board.score += m.board_after.score
+    
+    def find_best_move(self, board):
+        self.set_tree()
+        self.score_tree()
+        best = board.moves[0]
+        for move in board.moves:
+            if move.board.score > best.board.score:
+                best = move.board.score
+                
+        return best
 
 if __name__ == "__main__":
     from board import *
@@ -64,10 +79,11 @@ if __name__ == "__main__":
     m = moves[0].board_after_move()
     ml = [["x", "o", "x"], ["o", "o", "x"], [" ", " ", "o"]]
     assert Board(ml) == m
-    b.board = [[" ", " ", " "], [" ", " ", " "], [" ", " ", " "]]
+    #b.board = [[" ", " ", " "], [" ", " ", " "], [" ", " ", " "]]
     player = "o"
-    Modeler.set_tree(b, "o")
-    b.score_tree("o")
+    modeler = Modeler()
+    modeler.set_tree(b, "o")
+    modeler.score_tree(b, "o")
     
     with open("moves.dot", "w") as file:
         file.write("digraph moves {")
@@ -80,14 +96,3 @@ if __name__ == "__main__":
                    """)
         b.graph_tree(file)
         file.write("}")
-"""
-    Modeler.set_tree(b, "x")
-    print(b.graphviz_possible_moves())
-    with open("moves.dot", "w") as file:
-        file.write(b.graphviz_possible_moves())
-
-    Modeler.set_tree(b, "o")
-    with open("tree.dot", "w") as file:
-        file.write(b.graph_move_tree())
-
-"""

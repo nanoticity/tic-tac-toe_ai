@@ -115,29 +115,6 @@ class Board:
                     string += column
             string += "\n"
         return string
-    
-    def graphviz_possible_moves(self):
-        move_string = """
-        """
-        c = 0
-        for move in self.moves:
-            move_string += move.graphviz_move(c)
-            c += 1
-        
-        string = f"""digraph moves {{
-            node [
-                shape = "rect"
-            ]
-            edge 
-            [
-                fontsize="9"
-                ]
-            {move_string}
-        }}
-    
-        """
-        
-        return string
 
     def graph(self, file):
         c = "white"
@@ -168,29 +145,6 @@ class Board:
         else:
             assert player == "o"
             return "x"        
-    
-    def score_tree(self, player):
-        if self.who_wins() == player:
-            self.score = 1
-        elif self.who_wins() == Board.other_player(player):
-            self.score = -1
-        elif self.is_full():
-            self.score = 0
-        else:
-            self.score = 0
-            for m in self.moves:
-                m.board_after.score_tree(player)
-                self.score += m.board_after.score
-    
-    def find_best_move(self):
-        #set_move()
-        self.score_tree()
-        best = self.moves[0]
-        for move in self.moves:
-            if move.board.score > best.board.score:
-                best = move.board.score
-                
-        return best
     
     def __str__(self) -> str:
         return f"""{"".join(self.board[0])}
