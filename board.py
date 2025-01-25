@@ -116,11 +116,13 @@ class Board:
             string += "\n"
         return string
 
-    def graph(self, file):
+    # Graph the scoring tree, use colors from perspective of the player (green
+    # wins, red loses, yellow tie).
+    def graph(self, file, player):
         c = "white"
-        if self.who_wins() == "o":
+        if self.who_wins() == Board.other_player(player):
             c = "red"
-        elif self.who_wins() == "x":
+        elif self.who_wins() == player:
             c = "green"
         elif self.is_full():
             c = "yellow"
@@ -133,11 +135,11 @@ class Board:
             ]
         """)
     
-    def graph_tree(self, file):
-        self.graph(file)
+    def graph_tree(self, file, player):
+        self.graph(file, player)
         for m in self.moves:
             m.graph(file)
-            m.board_after.graph_tree(file)
+            m.board_after.graph_tree(file, player)
             
     def other_player(player):
         if player == "x":
