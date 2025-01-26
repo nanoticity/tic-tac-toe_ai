@@ -58,7 +58,7 @@ class Game:
                 self.text(message, (300, 300), 100, Color.color("red"))
                 pg.display.update()
                 pg.time.wait(3000)
-                self.reset()
+                run = False
                 
             self.screen.fill(Color.color("white"))
             self.board.draw()

@@ -147,6 +147,15 @@ class Board:
         else:
             assert player == "o"
             return "x"        
+        
+    def empty_squares(self):
+        total = 0
+        for row in self.board:
+            for square in row:
+                if square == " ":
+                    total += 1
+        
+        return total
     
     def __str__(self) -> str:
         return f"""{"".join(self.board[0])}

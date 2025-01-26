@@ -1,4 +1,5 @@
 from board import *
+from math import factorial
 
 class Move:
     def __init__(self, board, player, where):
@@ -47,10 +48,11 @@ class Modeler:
     
     # Score the tree from the perspective of the player            
     def score_tree(board, player):
+        weight = factorial(board.empty_squares() + 1)
         if board.who_wins() == player:
-            board.score = 1
+            board.score = weight
         elif board.who_wins() == Board.other_player(player):
-            board.score = -1
+            board.score = -weight
         elif board.is_full():
             board.score = 0
         else:
@@ -74,7 +76,8 @@ class Modeler:
 if __name__ == "__main__":
     from board import *
 
-    b = Board([["x", "o", "x"], ["o", " ", "x"], [" ", " ", " "]])
+    b = Board([['o', 'x', ' '], [' ', 'x', ' '], [' ', ' ', ' ']])
+    b = Board([["x", "o", "x"], [" ", "o", " "], ["x", " ", " "]])
 
     moves = Move.possible_moves(b, "o")
     #assert [m.where for m in moves] == [(1, 1), (2, 0), (2, 1)]
@@ -90,6 +93,7 @@ if __name__ == "__main__":
     
     with open("moves.dot", "w") as file:
         file.write("digraph moves {")
+        file.write("  rankdir=LR")
         file.write("""
         node [
             shape = "rect"
