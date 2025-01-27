@@ -3,6 +3,7 @@ from color import *
 from board import *
 from mouse import *
 from modeler import *
+import asyncio
 pg.init()
 
 class Game:
@@ -11,6 +12,7 @@ class Game:
         # self.board.board = [["x", "o", "x"], ["o", " ", " "], [" ", " ", " "]]
     def __init__(self):
         self.screen = pg.display.set_mode(Board.SIZE)
+        pg.display.set_caption("Tic Tac Toe!")
         self.reset()
         self.mouse = Mouse()
         self.clicked = False
@@ -20,7 +22,7 @@ class Game:
         text = font.render(to_write, True, color)
         textpos = text.get_rect(centerx = pos[0], centery = pos[1])
         self.screen.blit(text, textpos)
-    def run(self):
+    async def run(self):
         run = True
         while run:
             for e in pg.event.get():
@@ -57,11 +59,13 @@ class Game:
                 self.board.draw()
                 self.text(message, (300, 300), 100, Color.color("red"))
                 pg.display.update()
-                pg.time.wait(3000)
+                for i in range(10000000):
+                    pg.display.update
                 run = False
                 
             self.screen.fill(Color.color("white"))
             self.board.draw()
             pg.display.update()
             self.clicked = False
+            await asyncio.sleep(0.02)
     

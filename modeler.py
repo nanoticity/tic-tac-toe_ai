@@ -59,7 +59,7 @@ class Modeler:
             board.score = 0
             for m in board.moves:
                 Modeler.score_tree(m.board_after, player)
-                board.score += m.board_after.score
+                board.score += m.board_after.score       
     
     def find_best_move(board, player):
         Modeler.set_tree(board, player)
