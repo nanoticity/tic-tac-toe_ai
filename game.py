@@ -59,9 +59,8 @@ class Game:
                 self.board.draw()
                 self.text(message, (300, 300), 100, Color.color("red"))
                 pg.display.update()
-                for i in range(10000000):
-                    pg.display.update
-                run = False
+                await asyncio.sleep(3)
+                run = False 
                 
             self.screen.fill(Color.color("white"))
             self.board.draw()
