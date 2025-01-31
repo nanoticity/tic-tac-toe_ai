@@ -29,8 +29,6 @@ class Game:
             for e in pg.event.get():
                 if e.type == pg.QUIT:
                     run = False
-                if e.type == pg.KEYDOWN:
-                    self.reset()
                 if e.type == pg.MOUSEBUTTONDOWN and not self.clicked:
                     b = self.mouse.which_box()
                     if self.board.board[b[0]][b[1]] == " ":
