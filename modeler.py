@@ -85,7 +85,6 @@ class Modeler:
         totals = list(map(
             lambda x: round(x * 100 / total_leaves),
             Modeler.total_outcomes(board)))
-        print(f"{list(Modeler.total_outcomes(board))} * 100 = {list(map(lambda x: round(x * 100), Modeler.total_outcomes(board)))} / {factorial(board.empty_squares())} = {list(map(lambda x: round(x * 100 / total_leaves), Modeler.total_outcomes(board)))}")
         hundred = sum(totals)
         return totals + [hundred]
 
@@ -93,12 +92,9 @@ class Modeler:
         Modeler.set_tree(board, player)
         Modeler.score_tree(board, player)
         best = board.moves[0]
-        print("searching for best move:")
         for move in board.moves:
-            print(move)
             if move.board_after.score > best.board_after.score:
                 best = move
-        print("best move: ", best)
         return best
 
 if __name__ == "__main__":
