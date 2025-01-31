@@ -66,6 +66,7 @@ class Game:
             self.screen.fill(Color.color("white"))
             self.board.draw()
             pg.draw.line(self.screen, Color.color("black"), (600, 0), (600, 600), 10)
+            self.text("Live Chances", (700, 50), 30, Color.color("black"))
             self.text("Win: " + str(probs[0]) + "%", (700, 150), 25, Color.color("darkolivegreen4"))
             self.text("Tie: " + str(probs[1]) + "%", (700, 300), 25, Color.color("gold3"))
             self.text("Loss: " + str(probs[2]) + "%", (700, 450), 25, Color.color("orangered3"))
