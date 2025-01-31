@@ -3,4 +3,4 @@ import asyncio
 
 g = Game()
 
-asyncio.run(g.run())    
+asyncio.run(g.run())

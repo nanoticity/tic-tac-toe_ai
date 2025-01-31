@@ -45,10 +45,14 @@ class Modeler:
             after_move = move.board_after_move()
             if not after_move.is_game_over():
                 Modeler.set_tree(after_move, Board.other_player(player))
-    
-    # Score the tree from the perspective of the player            
+
+    # Score the tree from the perspective of the player
     def score_tree(board, player):
-        weight = factorial(board.empty_squares() + 1)
+        weight = factorial(board.empty_squares())
+        # There is only a single final move from the penultimate board.  The
+        # final and the penultimate board have the same weight of 1.
+        if weight == 0:
+            weight = 1
         if board.who_wins() == player:
             board.score = weight
         elif board.who_wins() == Board.other_player(player):
@@ -59,8 +63,32 @@ class Modeler:
             board.score = 0
             for m in board.moves:
                 Modeler.score_tree(m.board_after, player)
-                board.score += m.board_after.score       
-    
+                board.score += m.board_after.score 
+
+    # Call after Modeler.score_tree()
+    def total_outcomes(board):
+        if board.is_game_over():
+            if board.score > 0:
+                return [board.score, 0, 0]
+            elif board.score == 0:
+                return [0, 1, 0]
+            else:
+                return [0, 0, -board.score]
+        total = [0, 0, 0]
+        for m in board.moves:
+            t = Modeler.total_outcomes(m.board_after)
+            total = map(lambda x, y: x + y, t, total)
+        return total
+
+    def compute_probs(board):
+        total_leaves = factorial(board.empty_squares())
+        totals = list(map(
+            lambda x: round(x * 100 / total_leaves),
+            Modeler.total_outcomes(board)))
+        print(f"{list(Modeler.total_outcomes(board))} * 100 = {list(map(lambda x: round(x * 100), Modeler.total_outcomes(board)))} / {factorial(board.empty_squares())} = {list(map(lambda x: round(x * 100 / total_leaves), Modeler.total_outcomes(board)))}")
+        hundred = sum(totals)
+        return totals + [hundred]
+
     def find_best_move(board, player):
         Modeler.set_tree(board, player)
         Modeler.score_tree(board, player)
@@ -76,21 +104,22 @@ class Modeler:
 if __name__ == "__main__":
     from board import *
 
-    b = Board([['o', 'x', ' '], [' ', 'x', ' '], [' ', ' ', ' ']])
+    # b = Board([['o', 'x', ' '], [' ', 'x', ' '], [' ', ' ', ' ']])
     b = Board([["x", "o", "x"], [" ", "o", " "], ["x", " ", " "]])
 
     moves = Move.possible_moves(b, "o")
     #assert [m.where for m in moves] == [(1, 1), (2, 0), (2, 1)]
 
     m = moves[0].board_after_move()
-    ml = [["x", "o", "x"], ["o", "o", "x"], [" ", " ", "o"]]
+    ml = [["x", "o", "x"], [" ", " ", "x"], [" ", " ", "o"]]
     #assert Board(ml) == m
     #b.board = [[" ", " ", " "], [" ", " ", " "], [" ", " ", " "]]
     player = "o"
-    Modeler.set_tree(b, "o")
-    Modeler.score_tree(b, "o")
-    Modeler.find_best_move(b, "o")
+    # b.board = ml
+    Modeler.set_tree(b, "x")
+    Modeler.score_tree(b, "x")
     
+    # Modeler.find_best_move(b, "o")
     with open("moves.dot", "w") as file:
         file.write("digraph moves {")
         file.write("  rankdir=LR")
@@ -101,5 +130,7 @@ if __name__ == "__main__":
             fillcolor = "white"
         ]
                    """)
-        b.graph_tree(file, "o")
+        b.graph_tree(file, "x")
         file.write("}")
+        
+    print("prob:", Modeler.compute_probs(b))
