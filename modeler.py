@@ -58,7 +58,7 @@ class Modeler:
         elif board.who_wins() == Board.other_player(player):
             board.score = -weight
         elif board.is_full():
-            board.score = 0
+            board.score = 0.1
         else:
             board.score = 0
             for m in board.moves:
@@ -68,12 +68,12 @@ class Modeler:
     # Call after Modeler.score_tree()
     def total_outcomes(board):
         if board.is_game_over():
-            if board.score > 0:
+            if board.score >= 1:
                 return [board.score, 0, 0]
-            elif board.score == 0:
-                return [0, 1, 0]
-            else:
+            elif board.score < 0:
                 return [0, 0, -board.score]
+            else:
+                return [0, 1, 0]
         total = [0, 0, 0]
         for m in board.moves:
             t = Modeler.total_outcomes(m.board_after)
@@ -101,7 +101,9 @@ if __name__ == "__main__":
     from board import *
 
     # b = Board([['o', 'x', ' '], [' ', 'x', ' '], [' ', ' ', ' ']])
-    b = Board([["x", "o", "x"], [" ", "o", " "], ["x", " ", " "]])
+    b = Board([["o", "x", "o"],
+               [" ", "x", " "],
+               [" ", " ", "x"]])
 
     moves = Move.possible_moves(b, "o")
     #assert [m.where for m in moves] == [(1, 1), (2, 0), (2, 1)]
@@ -112,8 +114,9 @@ if __name__ == "__main__":
     #b.board = [[" ", " ", " "], [" ", " ", " "], [" ", " ", " "]]
     player = "o"
     # b.board = ml
-    Modeler.set_tree(b, "x")
-    Modeler.score_tree(b, "x")
+    player = "o"
+    Modeler.set_tree(b, player)
+    Modeler.score_tree(b, player)
     
     # Modeler.find_best_move(b, "o")
     with open("moves.dot", "w") as file:
