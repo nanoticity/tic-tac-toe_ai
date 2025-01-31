@@ -1,5 +1,4 @@
 import pygame as pg
-import copy
 from color import *
 pg.init()
 
@@ -103,7 +102,10 @@ class Board:
                 yield (row[0], field[0], field[1])
 
     def clone(self):
-        return copy.deepcopy(self.board)
+        board = []
+        for row in self.board:
+            board.append(row[:])
+        return board
     
     def format_board(self):
         string = ""

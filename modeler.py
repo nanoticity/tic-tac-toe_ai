@@ -1,5 +1,10 @@
 from board import *
-from math import factorial
+
+def factorial(n):
+    total = 1
+    for i in range(1, n + 1):
+        total *= i
+    return total
 
 class Move:
     def __init__(self, board, player, where):
@@ -133,3 +138,5 @@ if __name__ == "__main__":
         file.write("}")
         
     print("prob:", Modeler.compute_probs(b))
+    
+    print("factorial", factorial(4))
