@@ -22,7 +22,31 @@ class Game:
         text = font.render(to_write, True, color)
         textpos = text.get_rect(centerx = pos[0], centery = pos[1])
         self.screen.blit(text, textpos)
+    
+    async def title(self):
+        title = True
+        while title:
+            for e in pg.event.get():
+                if e.type == pg.QUIT:
+                    title = False
+                if e.type == pg.MOUSEBUTTONDOWN:
+                    if e.button == 1:
+                        title = False
+                        run = True
+            self.screen.fill(Color.color("white"))
+            self.text("Tic Tac Toe! By Nano", (400, 100), 100, Color.color("black"))
+            self.text("Click anywhere on the screen to play.", (400, 200), 50, Color.color("black"))
+            self.text("Made with Pygame and Pyodide", (400, 300), 35, Color.color("black"))
+            self.text("Repo: https://github.com/nanoticity/tic-tac-toe_ai", (400, 350), 35, Color.color("black"))
+            self.text("I think you know how to play", (400, 400), 35, Color.color("black"))
+            self.text("But with an unbeateble AI", (400, 450), 35, Color.color("black"))
+            self.text("Good luck beating it!", (400, 500), 35, Color.color("black"))
+            self.text("For High Seas 2024-2025", (400, 550), 35, Color.color("black"))
+            pg.display.update()
+            await asyncio.sleep(0.02)
+        
     async def run(self):
+        await self.title()
         probs = [58, 13, 29]
         run = True
         while run:
@@ -64,10 +88,10 @@ class Game:
             self.screen.fill(Color.color("white"))
             self.board.draw()
             pg.draw.line(self.screen, Color.color("black"), (600, 0), (600, 600), 10)
-            self.text("Live Chances", (700, 50), 30, Color.color("black"))
-            self.text("Win: " + str(probs[0]) + "%", (700, 150), 25, Color.color("darkolivegreen4"))
-            self.text("Tie: " + str(probs[1]) + "%", (700, 300), 25, Color.color("gold3"))
-            self.text("Loss: " + str(probs[2]) + "%", (700, 450), 25, Color.color("orangered3"))
+            self.text("Live Chances", (705, 40), 37, Color.color("black"))
+            self.text("Win: " + str(probs[0]) + "%", (700, 150), 50, Color.color("darkolivegreen4"))
+            self.text("Tie: " + str(probs[1]) + "%", (700, 300), 50, Color.color("gold3"))
+            self.text("Loss: " + str(probs[2]) + "%", (700, 450), 50, Color.color("orangered3"))
             pg.display.update()
             self.clicked = False
             await asyncio.sleep(0.02)

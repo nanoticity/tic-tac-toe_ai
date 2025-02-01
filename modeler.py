@@ -63,7 +63,7 @@ class Modeler:
         elif board.who_wins() == Board.other_player(player):
             board.score = -weight
         elif board.is_full():
-            board.score = 0.1
+            board.score = 0.99
         else:
             board.score = 0
             for m in board.moves:
@@ -106,9 +106,9 @@ if __name__ == "__main__":
     from board import *
 
     # b = Board([['o', 'x', ' '], [' ', 'x', ' '], [' ', ' ', ' ']])
-    b = Board([["o", "x", "o"],
+    b = Board([["o", "x", " "],
                [" ", "x", " "],
-               [" ", " ", "x"]])
+               [" ", " ", " "]])
 
     moves = Move.possible_moves(b, "o")
     #assert [m.where for m in moves] == [(1, 1), (2, 0), (2, 1)]
