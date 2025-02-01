@@ -32,7 +32,6 @@ class Game:
                 if e.type == pg.MOUSEBUTTONDOWN:
                     if e.button == 1:
                         title = False
-                        run = True
             self.screen.fill(Color.color("white"))
             self.text("Tic Tac Toe! By Nano", (400, 100), 100, Color.color("black"))
             self.text("Click anywhere on the screen to play.", (400, 200), 50, Color.color("black"))
